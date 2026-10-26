@@ -1,0 +1,714 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Aurum Raíz</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style id="app-style">
+/* Concepto: libro de cuentas de una casa de empeño de lujo. Negro cálido, oro viejo,
+   cifras en monoespaciada como en una tasación, titulares en serif con carácter. */
+:root{
+  --bg:#0E0C09; --bg2:#17140F; --bg3:#201A12; --line:#352B1B;
+  --fg:#F3ECDC; --dim:#AC9F86; --gold:#D6AB4C; --gold2:#F1D58C; --gold3:#8C6A22;
+  --on-gold:#1A1306; --ok:#86C592; --warn:#E5AC5C; --bad:#E58278; --hdr:rgba(14,12,9,.9);
+  --shadow:0 24px 60px -28px rgba(0,0,0,.8);
+  --display:'Fraunces',Georgia,'Times New Roman',serif;
+  --body:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#FBF7EC; --bg2:#FFFFFF; --bg3:#F4ECD9; --line:#E2D6B8;
+    --fg:#211A0F; --dim:#6F6350; --gold:#97701A; --gold2:#B98A22; --gold3:#C9A24B;
+    --on-gold:#FFFBEE; --ok:#2F7A44; --warn:#9A5F0F; --bad:#B23A2E; --hdr:rgba(251,247,236,.92);
+    --shadow:0 24px 50px -30px rgba(70,50,10,.35);
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#FBF7EC; --bg2:#FFFFFF; --bg3:#F4ECD9; --line:#E2D6B8;
+  --fg:#211A0F; --dim:#6F6350; --gold:#97701A; --gold2:#B98A22; --gold3:#C9A24B;
+  --on-gold:#FFFBEE; --ok:#2F7A44; --warn:#9A5F0F; --bad:#B23A2E; --hdr:rgba(251,247,236,.92);
+  --shadow:0 24px 50px -30px rgba(70,50,10,.35);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{background:var(--bg);color:var(--fg);font:16px/1.55 var(--body);margin:0;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:70;background:var(--bg)}
+a{color:inherit}
+img,svg{display:block;max-width:100%}
+h1,h2,h3,h4{font-family:var(--display);font-weight:600;line-height:1.1;margin:0;letter-spacing:-.01em;text-wrap:balance}
+p{margin:0}
+.in{width:100%;max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.eyebrow{font:500 .74rem/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+:focus-visible{outline:2px solid var(--gold2);outline-offset:3px;border-radius:6px}
+
+/* botones */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:600 .95rem/1 var(--body);padding:14px 22px;border-radius:10px;border:1px solid transparent;cursor:pointer;text-decoration:none;transition:transform .15s,filter .15s,border-color .15s;min-height:46px}
+.btn:active{transform:translateY(1px)}
+.btn-gold{background:linear-gradient(180deg,var(--gold2),var(--gold) 55%,var(--gold3));color:var(--on-gold);box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
+.btn-gold:hover{filter:brightness(1.07)}
+.btn-line{background:transparent;color:var(--fg);border-color:var(--line)}
+.btn-line:hover{border-color:var(--gold)}
+.btn-sm{padding:9px 14px;font-size:.84rem;min-height:38px;border-radius:8px}
+.btn-bad{background:transparent;color:var(--bad);border-color:var(--line)}
+.btn[disabled]{opacity:.5;cursor:default}
+
+/* cinta de precios */
+.ticker{background:var(--bg3);border-bottom:1px solid var(--line);font:400 .78rem/1 var(--mono);color:var(--dim)}
+.ticker .in{display:flex;gap:6px 22px;flex-wrap:wrap;align-items:center;padding-top:9px;padding-bottom:9px}
+.ticker b{color:var(--gold2);font-weight:500}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ok);margin-right:8px;animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.dot{animation:none}html{scroll-behavior:auto}}
+
+/* cabecera */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:60;background:var(--hdr);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+header.top .in{display:flex;align-items:center;gap:20px;padding-top:12px;padding-bottom:12px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;margin-right:auto;min-width:0}
+.brand svg{width:34px;height:34px;flex:none}
+.brand span{font:600 1.25rem/1 var(--display);letter-spacing:.01em;white-space:nowrap}
+.brand small{display:block;font:400 .68rem/1.2 var(--mono);color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
+nav.links{display:flex;gap:26px;font-weight:500;font-size:.92rem}
+nav.links a{text-decoration:none;color:var(--dim)}
+nav.links a:hover{color:var(--fg)}
+@media (max-width:860px){nav.links{display:none}}
+@media (max-width:480px){.brand small{display:none}header.top .btn{padding:10px 14px}}
+
+/* hero */
+.hero{padding-top:clamp(36px,6vw,84px);padding-bottom:clamp(40px,6vw,84px);background:radial-gradient(900px 420px at 85% 0%,rgba(214,171,76,.16),transparent 70%)}
+.hero .in{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(28px,5vw,64px);align-items:start}
+.hero h1{font-size:clamp(2.4rem,5.6vw,4.2rem);font-variation-settings:"opsz" 144;margin:16px 0 18px}
+.hero h1 em{font-style:italic;font-weight:400;color:var(--gold2)}
+.hero .lead{font-size:1.1rem;color:var(--dim);max-width:34em}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0 30px}
+.rates{width:100%;max-width:440px;border-top:1px solid var(--line)}
+.rates .r{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font:400 .9rem/1 var(--mono)}
+.rates .r span:first-child{color:var(--dim)}
+.rates .r span:last-child{color:var(--gold2)}
+.rates-cap{font:400 .74rem/1.4 var(--mono);color:var(--dim);margin-top:10px}
+@media (max-width:900px){.hero .in{grid-template-columns:minmax(0,1fr)}}
+
+/* calculadora */
+.calc{background:linear-gradient(180deg,var(--bg2),var(--bg3));border:1px solid var(--gold3);border-radius:18px;padding:clamp(18px,3vw,30px);box-shadow:var(--shadow);min-width:0}
+.calc h2{font-size:1.45rem;margin-bottom:4px}
+.calc .sub{color:var(--dim);font-size:.9rem;margin-bottom:20px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fld{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fld label,.lbl{font:500 .72rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.fld.full{grid-column:1/-1}
+input[type=text],input[type=number],input[type=tel],input[type=search],select,textarea{width:100%;font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 13px;min-height:46px}
+textarea{min-height:92px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+.out{margin-top:20px;border-top:1px dashed var(--gold3)}
+.out .o{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:12px 0;border-bottom:1px dashed var(--line)}
+.out .o span:first-child{color:var(--dim);font-size:.9rem}
+.out .o b{font:500 1.05rem/1 var(--mono);white-space:nowrap}
+.out .o.big b{font:600 1.7rem/1 var(--display);color:var(--gold2)}
+.calc .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.fine{font-size:.78rem;color:var(--dim);margin-top:14px}
+@media (max-width:420px){.fgrid,.calc .actions{grid-template-columns:1fr}}
+
+/* secciones */
+section.sec{padding-top:clamp(48px,7vw,96px);padding-bottom:clamp(8px,2vw,24px)}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:20px 40px;flex-wrap:wrap;margin-bottom:clamp(22px,3vw,38px)}
+.sec-head h2{font-size:clamp(1.8rem,3.4vw,2.7rem);margin-top:12px;max-width:16em}
+.sec-head p{color:var(--dim);max-width:30em}
+
+/* condiciones */
+.terms{border-top:1px solid var(--gold3)}
+.term{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1.6fr) minmax(0,.9fr);gap:12px 36px;padding:26px 0;border-bottom:1px solid var(--line);align-items:center}
+.term h3{font-size:1.4rem}
+.term p{color:var(--dim)}
+.term .key{font:600 2rem/1 var(--display);color:var(--gold2);text-align:right}
+.term .key small{display:block;font:400 .72rem/1.3 var(--mono);color:var(--dim);letter-spacing:.06em;margin-top:6px;text-transform:uppercase}
+@media (max-width:760px){.term{grid-template-columns:1fr}.term .key{text-align:left}}
+
+/* pasos */
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;counter-reset:s}
+.step{padding:22px 22px 24px 0;border-top:2px solid var(--gold3);position:relative}
+.step::before{counter-increment:s;content:"0" counter(s);font:500 .8rem/1 var(--mono);color:var(--gold);display:block;margin-bottom:14px}
+.step h3{font-size:1.15rem;margin-bottom:8px}
+.step p{color:var(--dim);font-size:.93rem}
+@media (max-width:860px){.steps{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px}}
+@media (max-width:480px){.steps{grid-template-columns:1fr}}
+
+/* tarjetas */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,290px),1fr));gap:20px}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-width:0;transition:border-color .2s,transform .2s}
+.card:hover{border-color:var(--gold3);transform:translateY(-3px)}
+.card .art{aspect-ratio:16/10;background:var(--bg3);position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.card .art svg,.card .art img{width:100%;height:100%;object-fit:cover}
+.card .body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:10px;flex:1}
+.card h3{font-size:1.18rem;font-family:var(--display)}
+.card .loc{color:var(--dim);font-size:.88rem}
+.card .price{font:600 1.45rem/1 var(--display);color:var(--gold2);margin-top:auto;padding-top:6px}
+.card .price small{font:400 .78rem var(--mono);color:var(--dim)}
+.facts{display:flex;gap:6px 16px;flex-wrap:wrap;font:400 .8rem/1.2 var(--mono);color:var(--dim)}
+.card .btns{display:flex;gap:8px;flex-wrap:wrap}
+.tag{position:absolute;top:12px;left:12px;font:500 .7rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:6px 9px;border-radius:6px;background:var(--bg);color:var(--gold2);border:1px solid var(--gold3)}
+.tag.r{left:auto;right:12px;color:var(--fg);border-color:var(--line)}
+.tag.ex{top:auto;bottom:12px;color:var(--dim);border-color:var(--line)}
+.tag.off{color:var(--warn);border-color:var(--warn)}
+.filters{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin-bottom:24px;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--bg2)}
+.filters .fld{flex:1 1 150px}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg)}
+.seg button{flex:1;font:600 .86rem var(--body);color:var(--dim);background:transparent;border:0;padding:0 14px;min-height:44px;cursor:pointer}
+.seg button.on{background:var(--gold);color:var(--on-gold)}
+.empty{padding:36px 16px;text-align:center;color:var(--dim);border:1px dashed var(--line);border-radius:14px;grid-column:1/-1}
+
+/* oro: franja de lingotes */
+.ingot-band{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,60px);align-items:center;margin-bottom:34px}
+.ingot-band svg{width:100%;max-width:420px;margin:0 auto}
+@media (max-width:760px){.ingot-band{grid-template-columns:1fr}}
+.ingot-band ul{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:10px}
+.ingot-band li{display:flex;gap:12px;color:var(--dim)}
+.ingot-band li::before{content:"";flex:none;width:7px;height:7px;margin-top:.55em;background:var(--gold);transform:rotate(45deg)}
+
+/* faq */
+details{border-bottom:1px solid var(--line);padding:4px 0}
+details summary{cursor:pointer;list-style:none;font:600 1.12rem/1.35 var(--display);padding:16px 36px 16px 0;position:relative}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"+";position:absolute;right:4px;top:12px;font:400 1.6rem/1 var(--mono);color:var(--gold)}
+details[open] summary::after{content:"–"}
+details p{color:var(--dim);padding:0 0 18px;max-width:46em}
+.faq{border-top:1px solid var(--gold3)}
+
+/* contacto */
+.contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px)}
+@media (max-width:860px){.contact{grid-template-columns:1fr}}
+.info-list{display:grid;gap:18px;margin-top:22px}
+.info-list div{padding-bottom:16px;border-bottom:1px solid var(--line)}
+.info-list .lbl{display:block;margin-bottom:7px}
+.info-list span.v{font:500 1rem var(--mono);user-select:all;word-break:break-word}
+.panel{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:clamp(18px,3vw,28px)}
+
+/* pie */
+footer{margin-top:clamp(56px,8vw,110px);border-top:1px solid var(--line);background:var(--bg2)}
+footer .in{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between;align-items:center;padding-top:26px;padding-bottom:calc(26px + 8px);color:var(--dim);font-size:.86rem}
+footer button{background:none;border:0;color:var(--dim);font:inherit;cursor:pointer;text-decoration:underline;padding:8px 0}
+footer button:hover{color:var(--gold2)}
+
+/* modales */
+.ov{position:fixed;inset:0;z-index:80;background:rgba(5,4,2,.72);display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.dlg{background:var(--bg2);border:1px solid var(--gold3);border-radius:18px;width:100%;max-width:520px;max-height:100%;overflow:auto;padding:clamp(20px,3vw,30px);box-shadow:var(--shadow)}
+.dlg.wide{max-width:760px}
+.dlg h2{font-size:1.6rem;margin-bottom:6px}
+.dlg .sub{color:var(--dim);margin-bottom:18px}
+.dlg .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.dlg .x{float:right;background:none;border:0;color:var(--dim);font-size:1.7rem;line-height:1;cursor:pointer;padding:0 4px;margin:-6px -6px 0 12px}
+.err{color:var(--bad);font-size:.88rem;min-height:1.2em;margin-top:10px}
+.chk{display:flex;align-items:center;gap:10px;min-height:44px}
+.chk input{width:20px;height:20px;accent-color:var(--gold)}
+.det-art{aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:var(--bg3);margin-bottom:18px;border:1px solid var(--line)}
+.det-art svg,.det-art img{width:100%;height:100%;object-fit:cover}
+.det-price{font:600 1.9rem/1 var(--display);color:var(--gold2);margin:8px 0 14px}
+
+#toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:max(20px,env(safe-area-inset-bottom,0px));z-index:120;display:grid;gap:8px;width:min(92vw,420px)}
+.toast{background:var(--fg);color:var(--bg);padding:12px 16px;border-radius:10px;font-weight:600;font-size:.92rem;box-shadow:var(--shadow)}
+
+/* administrador */
+.adm{position:fixed;inset:0;z-index:75;background:var(--bg);display:grid;grid-template-columns:230px minmax(0,1fr);overflow:hidden}
+.adm aside{background:var(--bg2);border-right:1px solid var(--line);padding:max(22px,env(safe-area-inset-top,0px)) 14px 22px max(14px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:6px;overflow:auto}
+.adm aside h3{font-size:1.2rem;margin:0 8px 14px}
+.adm aside button.tab{text-align:left;background:none;border:0;color:var(--dim);font:600 .93rem var(--body);padding:12px 12px;border-radius:9px;cursor:pointer;display:flex;justify-content:space-between;gap:8px;min-height:44px;align-items:center}
+.adm aside button.tab.on{background:var(--bg3);color:var(--gold2)}
+.adm aside button.tab:hover{color:var(--fg)}
+.adm .cnt{font:500 .72rem var(--mono);background:var(--gold);color:var(--on-gold);padding:3px 7px;border-radius:99px}
+.adm main{overflow:auto;padding:max(26px,env(safe-area-inset-top,0px)) max(26px,env(safe-area-inset-right,0px)) 40px 28px}
+.adm main h2{font-size:1.8rem;margin-bottom:6px}
+.adm main .sub{color:var(--dim);margin-bottom:22px;max-width:46em}
+.pubbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg2);margin-bottom:22px}
+.pubbar .st{margin-right:auto;font:400 .82rem var(--mono);color:var(--dim)}
+.pubbar .st.dirty{color:var(--warn)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px}
+.stat{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--bg2)}
+.stat b{display:block;font:600 1.9rem/1 var(--display);color:var(--gold2)}
+.stat span{font:400 .76rem var(--mono);color:var(--dim);letter-spacing:.04em;text-transform:uppercase}
+.lrow{display:flex;gap:10px 16px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--bg2);margin-bottom:10px}
+.lrow .t{min-width:0;flex:1 1 240px}
+.lrow .t b{display:block;font-family:var(--display);font-size:1.05rem}
+.lrow .t span{color:var(--dim);font-size:.86rem;overflow-wrap:anywhere}
+.lrow .a{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.badge{font:500 .7rem/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:6px 8px;border-radius:6px;border:1px solid var(--line);color:var(--dim)}
+.badge.n{color:var(--gold2);border-color:var(--gold3)}
+.badge.ok{color:var(--ok);border-color:var(--ok)}
+.notice{border:1px solid var(--warn);color:var(--warn);border-radius:12px;padding:12px 14px;margin-bottom:18px;font-size:.9rem}
+.set-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;max-width:760px}
+.adm .back{display:none}
+@media (max-width:760px){
+  .adm{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+  .adm aside{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding:max(12px,env(safe-area-inset-top,0px)) 12px 10px max(12px,env(safe-area-inset-left,0px))}
+  .adm aside h3{display:none}
+  .adm aside button.tab{white-space:nowrap}
+  .adm main{padding:20px max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px))}
+}
+</style>
+<div id="app"></div>
+<div id="toasts" aria-live="polite"></div>
+<script id="state" type="application/json">{"biz":{"name":"Aurum Raíz","tagline":"Casa de oro y bienes raíces","whatsapp":"+57 300 000 0000","phone":"+57 300 000 0000","email":"contacto@aurumraiz.co","address":"Dirección por confirmar, Bogotá D.C.","hours":"Lunes a viernes 9:00 a 18:00 · Sábados 9:00 a 14:00","demo":true},"rates":{"gold24":520000,"updated":"2026-10-25","buyPct":85,"loanPct":65,"rate":2,"maxMonths":6},"props":[{"id":"p1","titulo":"Apartamento con vista a los cerros","operacion":"Venta","tipo":"Apartamento","ciudad":"Bogotá","barrio":"Chapinero Alto","precio":420000000,"area":78,"hab":2,"banos":2,"descripcion":"Piso 9 con balcón, cocina integral y parqueadero doble. Edificio con portería 24 horas.","estado":"Disponible","destacado":true,"foto":"","ejemplo":true},{"id":"p2","titulo":"Casa de tres niveles con patio","operacion":"Venta","tipo":"Casa","ciudad":"Bogotá","barrio":"Cedritos","precio":980000000,"area":210,"hab":4,"banos":4,"descripcion":"Casa esquinera con estudio, terraza y garaje para dos carros. Zona residencial tranquila.","estado":"Disponible","destacado":true,"foto":"","ejemplo":true},{"id":"p3","titulo":"Lote plano para vivienda campestre","operacion":"Venta","tipo":"Lote","ciudad":"Chía","barrio":"Vereda Fonquetá","precio":310000000,"area":1200,"hab":0,"banos":0,"descripcion":"Lote escriturado con servicios cercanos y acceso pavimentado.","estado":"Disponible","destacado":false,"foto":"","ejemplo":true},{"id":"p4","titulo":"Local comercial sobre vía principal","operacion":"Arriendo","tipo":"Local","ciudad":"Bogotá","barrio":"Zona T","precio":6500000,"area":64,"hab":0,"banos":1,"descripcion":"Local a nivel de calle con vitrina amplia y bodega. Canon mensual.","estado":"Disponible","destacado":false,"foto":"","ejemplo":true},{"id":"p5","titulo":"Apartamento amoblado cerca al parque","operacion":"Arriendo","tipo":"Apartamento","ciudad":"Bogotá","barrio":"Usaquén","precio":3200000,"area":55,"hab":1,"banos":1,"descripcion":"Amoblado, con lavandería y gimnasio en el edificio. Canon mensual.","estado":"Reservado","destacado":false,"foto":"","ejemplo":true},{"id":"p6","titulo":"Finca con casa principal y arboleda","operacion":"Venta","tipo":"Finca","ciudad":"Tenjo","barrio":"Vereda Chince","precio":1250000000,"area":9000,"hab":5,"banos":4,"descripcion":"Casa principal, casa de huéspedes y zona de cultivo. Agua propia.","estado":"Disponible","destacado":true,"foto":"","ejemplo":true}],"gold":[{"id":"g1","nombre":"Cadena cubana","tipo":"Cadena","quilates":18,"gramos":22,"precio":9900000,"estado":"Disponible","ejemplo":true},{"id":"g2","nombre":"Solitario con diamante","tipo":"Anillo","quilates":18,"gramos":4.2,"precio":2450000,"estado":"Disponible","ejemplo":true},{"id":"g3","nombre":"Lingote de 10 gramos","tipo":"Lingote","quilates":24,"gramos":10,"precio":5700000,"estado":"Disponible","ejemplo":true},{"id":"g4","nombre":"Argollas clásicas","tipo":"Aretes","quilates":18,"gramos":6,"precio":2600000,"estado":"Disponible","ejemplo":true},{"id":"g5","nombre":"Pulsera eslabón fino","tipo":"Pulsera","quilates":14,"gramos":9.5,"precio":3300000,"estado":"Reservado","ejemplo":true},{"id":"g6","nombre":"Lingote de una onza troy","tipo":"Lingote","quilates":24,"gramos":31.1,"precio":17400000,"estado":"Disponible","ejemplo":true}]}</script>
+<script id="app-script">
+(function(){
+'use strict';
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var esc=function(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var cop=function(n){return '$'+Math.round(Number(n)||0).toLocaleString('es-CO')};
+var num=function(n,d){return (Number(n)||0).toLocaleString('es-CO',{maximumFractionDigits:d==null?1:d})};
+var S=JSON.parse($('#state').textContent);
+var KARATS=[24,22,18,14,10];
+var KINDS=['Préstamo con garantía de oro','Vender mi oro','Comprar oro','Comprar un inmueble','Arrendar un inmueble','Publicar mi inmueble','Otra consulta'];
+var RESET=':root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}';
+var HEAD='<title>Aurum Raíz</title><meta name="claude:viewport-fit-sides" content="cover"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">';
+var SHELL='<div id="app"></div><div id="toasts" aria-live="polite"></div>';
+var dirty=false, adminOpen=false, adminTab='resumen', remote=[], dbSub=false;
+var F={op:'Todas',tipo:'Todos',q:'',max:'',sort:'rec'};
+
+/* ---------- utilidades ---------- */
+function ls(k,v){try{if(v===undefined){var r=localStorage.getItem('ar:'+k);return r?JSON.parse(r):null}localStorage.setItem('ar:'+k,JSON.stringify(v))}catch(e){return null}}
+function toast(t){var b=$('#toasts');var d=document.createElement('div');d.className='toast';d.textContent=t;b.appendChild(d);setTimeout(function(){d.remove()},3800)}
+function perGram(k){return S.rates.gold24*k/24}
+function digits(s){return String(s||'').replace(/\D/g,'')}
+function waLink(msg){return 'https://wa.me/'+digits(S.biz.whatsapp)+(msg?'?text='+encodeURIComponent(msg):'')}
+function fdate(iso){try{return new Date(iso).toLocaleDateString('es-CO',{day:'numeric',month:'short',year:'numeric'})}catch(e){return iso}}
+function fdt(iso){try{return new Date(iso).toLocaleString('es-CO',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}catch(e){return iso}}
+var usePromise={};
+function cap(n){if(!usePromise[n]){usePromise[n]=(window.claude&&window.claude.use?window.claude.use(n):Promise.resolve(null)).catch(function(){return null})}return usePromise[n]}
+
+/* ---------- ilustraciones ---------- */
+function propArt(t){
+  var w='style="fill:var(--bg3)"';
+  var g='<rect width="320" height="200" '+w+'/><circle cx="262" cy="46" r="20" fill="url(#gGold)" opacity=".85"/>';
+  var gr='<path d="M0 170h320v30H0z" style="fill:var(--bg2)"/><path d="M0 170h320" style="stroke:var(--line)" stroke-width="2"/>';
+  var win=function(x,y,wd,h){return '<rect x="'+x+'" y="'+y+'" width="'+wd+'" height="'+h+'" rx="2" fill="url(#gGold)" opacity=".7"/>'};
+  var body='';
+  if(t==='Casa'){body='<path d="M70 170V92h180v78z" style="fill:var(--bg2);stroke:var(--gold3)" stroke-width="2"/><path d="M56 96L160 38l104 58z" style="fill:var(--bg);stroke:var(--gold)" stroke-width="2.5" stroke-linejoin="round"/><rect x="146" y="124" width="28" height="46" rx="3" fill="url(#gGold)"/>'+win(88,112,32,26)+win(200,112,32,26)}
+  else if(t==='Apartamento'){body='<path d="M96 170V30h128v140z" style="fill:var(--bg2);stroke:var(--gold3)" stroke-width="2"/>';for(var r=0;r<5;r++){for(var c=0;c<3;c++){body+=win(110+c*34,44+r*24,22,14)}}body+='<rect x="146" y="148" width="28" height="22" rx="2" fill="url(#gGold)"/>'}
+  else if(t==='Lote'){body='<path d="M30 170l70-48h130l60 48z" style="fill:var(--bg2);stroke:var(--gold3)" stroke-width="2"/><path d="M100 122l-34 48M165 122v48M230 122l34 48" style="stroke:var(--line)" stroke-width="1.5"/><path d="M160 60v62" style="stroke:var(--gold)" stroke-width="3"/><path d="M160 60h56v30h-56z" fill="url(#gGold)"/>'}
+  else if(t==='Local'){body='<path d="M52 170V84h216v86z" style="fill:var(--bg2);stroke:var(--gold3)" stroke-width="2"/><path d="M44 84l16-34h200l16 34z" style="fill:var(--bg)" stroke="url(#gGold)" stroke-width="2.5"/>';for(var i=0;i<6;i++){body+='<path d="M'+(60+i*33)+' 50h16.5l-4 34H'+(56+i*33)+'z" fill="url(#gGold)" opacity="'+(i%2?'.35':'.9')+'"/>'}body+='<rect x="76" y="106" width="100" height="64" rx="3" style="fill:var(--bg3);stroke:var(--gold3)" stroke-width="2"/><rect x="204" y="106" width="42" height="64" rx="3" fill="url(#gGold)" opacity=".8"/>'}
+  else {body='<path d="M0 150Q80 100 160 140T320 120v80H0z" style="fill:var(--bg2);stroke:var(--gold3)" stroke-width="2"/><path d="M110 150V104h74v46z" style="fill:var(--bg);stroke:var(--gold)" stroke-width="2"/><path d="M102 108l45-32 45 32z" style="fill:var(--bg);stroke:var(--gold)" stroke-width="2.5" stroke-linejoin="round"/><circle cx="238" cy="112" r="20" style="fill:var(--bg);stroke:var(--gold3)" stroke-width="2"/><path d="M238 132v26" style="stroke:var(--gold3)" stroke-width="3"/>'}
+  return '<svg viewBox="0 0 320 200" role="img" aria-label="'+esc(t)+'" preserveAspectRatio="xMidYMid slice">'+g+(t==='Finca'?'':gr)+body+'</svg>';
+}
+function goldArt(t,k){
+  var bg='<rect width="320" height="200" style="fill:var(--bg3)"/><ellipse cx="160" cy="176" rx="104" ry="9" style="fill:var(--bg)" opacity=".6"/>';
+  var b='';
+  if(t==='Lingote'){b='<path d="M66 150l22-62h144l22 62z" fill="url(#gGold)"/><path d="M88 88h144l-8 22H96z" fill="#fff" opacity=".28"/><path d="M96 124h128" stroke="#000" opacity=".22" stroke-width="2"/><text x="160" y="140" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="15" font-weight="500" fill="#000" opacity=".5">'+k+'K · 999,9</text>'}
+  else if(t==='Anillo'){b='<ellipse cx="160" cy="124" rx="48" ry="46" fill="none" stroke="url(#gGold)" stroke-width="13"/><path d="M160 54l20 22-20 26-20-26z" fill="#fff" opacity=".9"/><path d="M160 54l20 22h-40z" fill="#cfe8ff" opacity=".9"/><path d="M146 80h28" stroke="#9fb7cf" stroke-width="1.4"/>'}
+  else if(t==='Cadena'){b='<path d="M70 52Q160 190 250 52" fill="none" stroke="url(#gGold)" stroke-width="12" stroke-linecap="round" stroke-dasharray="15 5"/><path d="M70 52Q160 190 250 52" fill="none" stroke="#000" opacity=".18" stroke-width="3" stroke-dasharray="15 5" transform="translate(0 3)"/>'}
+  else if(t==='Aretes'){b='<circle cx="112" cy="104" r="42" fill="none" stroke="url(#gGold)" stroke-width="10"/><circle cx="208" cy="104" r="42" fill="none" stroke="url(#gGold)" stroke-width="10"/><circle cx="112" cy="60" r="5" fill="url(#gGold)"/><circle cx="208" cy="60" r="5" fill="url(#gGold)"/>'}
+  else if(t==='Pulsera'){b='<ellipse cx="160" cy="108" rx="82" ry="52" fill="none" stroke="url(#gGold)" stroke-width="12" stroke-dasharray="20 4"/><ellipse cx="160" cy="108" rx="82" ry="52" fill="none" stroke="#000" opacity=".15" stroke-width="3" stroke-dasharray="20 4"/>'}
+  else {b='<path d="M120 36Q160 4 200 36" fill="none" stroke="url(#gGold)" stroke-width="5"/><circle cx="160" cy="48" r="9" fill="none" stroke="url(#gGold)" stroke-width="5"/><path d="M160 66c36 0 52 26 52 52s-22 44-52 44-52-18-52-44 16-52 52-52z" fill="url(#gGold)"/><path d="M160 84c20 6 30 22 30 34" fill="none" stroke="#fff" opacity=".4" stroke-width="5" stroke-linecap="round"/>'}
+  return '<svg viewBox="0 0 320 200" role="img" aria-label="'+esc(t)+'" preserveAspectRatio="xMidYMid slice">'+bg+b+'</svg>';
+}
+function ingots(){
+  var bar=function(x,y,s){return '<g transform="translate('+x+' '+y+') scale('+s+')"><path d="M0 60l16-44h128l16 44z" fill="url(#gGold)"/><path d="M16 16h128l-6 16H22z" fill="#fff" opacity=".3"/><path d="M26 44h108" stroke="#000" opacity=".2" stroke-width="2"/></g>'};
+  return '<svg viewBox="0 0 420 260" role="img" aria-label="Lingotes de oro apilados"><ellipse cx="210" cy="238" rx="170" ry="12" style="fill:var(--bg3)"/>'+bar(40,170,1)+bar(220,170,1)+bar(130,112,1)+bar(40,54,1)+bar(220,54,1)+bar(130,0,1)+'</svg>';
+}
+var DEFS='<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6DFA0"/><stop offset=".45" stop-color="#D6AB4C"/><stop offset="1" stop-color="#8C6A22"/></linearGradient></defs></svg>';
+var LOGO='<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M4 30L20 6l16 24z" fill="none" stroke="url(#gGold)" stroke-width="2.6" stroke-linejoin="round"/><path d="M10 34l4-9h12l4 9z" fill="url(#gGold)"/></svg>';
+
+/* ---------- página pública ---------- */
+function ticker(){
+  var r=S.rates;
+  return '<div class="ticker"><div class="in"><span><span class="dot"></span>ORO 24K <b>'+cop(r.gold24)+'/g</b></span><span>18K <b>'+cop(perGram(18))+'/g</b></span><span>14K <b>'+cop(perGram(14))+'/g</b></span><span>Actualizado '+esc(fdate(r.updated+'T12:00:00'))+'</span></div></div>';
+}
+function header(){
+  return '<header class="top"><div class="in">'+
+    '<a class="brand" href="#inicio">'+LOGO+'<div><span>'+esc(S.biz.name)+'</span><small>'+esc(S.biz.tagline)+'</small></div></a>'+
+    '<nav class="links" aria-label="Principal"><a href="#condiciones">Condiciones</a><a href="#oro">Oro en venta</a><a href="#inmuebles">Inmuebles</a><a href="#preguntas">Preguntas</a><a href="#contacto">Contacto</a></nav>'+
+    '<button class="btn btn-gold btn-sm" data-act="req" data-kind="Otra consulta">Solicitar atención</button></div></header>';
+}
+function hero(){
+  var r=S.rates;
+  var rows=KARATS.map(function(k){return '<div class="r"><span>Oro '+k+' quilates</span><span>'+cop(perGram(k))+' / g</span></div>'}).join('');
+  var opts=KARATS.map(function(k){return '<option value="'+k+'"'+(k===18?' selected':'')+'>'+k+' quilates'+(k===24?' (puro)':'')+'</option>'}).join('');
+  return '<section class="hero" id="inicio"><div class="in"><div>'+
+    '<span class="eyebrow">Tasación a la vista · Bogotá</span>'+
+    '<h1>Cuánto vale su oro, <em>al gramo</em>, hoy.</h1>'+
+    '<p class="lead">Calcule en segundos una oferta de compra o un préstamo con garantía de oro. También vendemos oro con peso y quilataje registrados, y manejamos inmuebles en venta y arriendo.</p>'+
+    '<div class="cta-row"><button class="btn btn-gold" data-act="req" data-kind="Préstamo con garantía de oro">Pedir un préstamo</button><a class="btn btn-line" href="#inmuebles">Ver inmuebles</a></div>'+
+    '<div class="rates" role="table" aria-label="Precio de referencia por gramo">'+rows+'</div>'+
+    '<p class="rates-cap">Precio de referencia por gramo, definido por la casa. Actualizado el '+esc(fdate(r.updated+'T12:00:00'))+'.</p></div>'+
+    '<div class="calc"><h2>Calculadora de oro</h2><p class="sub">Escriba el quilataje y el peso de su pieza.</p>'+
+    '<div class="fgrid"><div class="fld"><label for="cK">Quilataje</label><select id="cK">'+opts+'</select></div>'+
+    '<div class="fld"><label for="cG">Peso en gramos</label><input id="cG" type="number" inputmode="decimal" min="0" step="0.1" value="12"></div></div>'+
+    '<div class="out" id="cOut"></div>'+
+    '<div class="actions"><button class="btn btn-gold" data-act="calc-loan">Pedir préstamo</button><button class="btn btn-line" data-act="calc-sell">Vender este oro</button></div>'+
+    '<p class="fine">Estimación sujeta a tasación presencial: peso real, pureza verificada y estado de la pieza.</p></div>'+
+    '</div></section>';
+}
+function calcVals(){
+  var k=Number(($('#cK')||{}).value)||18, g=Math.max(0,Number(($('#cG')||{}).value)||0), r=S.rates;
+  var val=g*perGram(k), buy=val*r.buyPct/100, loan=val*r.loanPct/100, int=loan*r.rate/100;
+  return {k:k,g:g,val:val,buy:buy,loan:loan,int:int};
+}
+function renderCalc(){
+  var o=$('#cOut'); if(!o) return; var c=calcVals(), r=S.rates;
+  o.innerHTML='<div class="o"><span>Valor de mercado</span><b>'+cop(c.val)+'</b></div>'+
+    '<div class="o big"><span>Oferta de compra ('+r.buyPct+'%)</span><b>'+cop(c.buy)+'</b></div>'+
+    '<div class="o"><span>Préstamo hasta ('+r.loanPct+'%)</span><b>'+cop(c.loan)+'</b></div>'+
+    '<div class="o"><span>Interés mensual ('+num(r.rate,2)+'%)</span><b>'+cop(c.int)+'</b></div>';
+}
+function terms(){
+  var r=S.rates;
+  var rows=[
+    ['Préstamos con garantía de oro','Su joya queda en custodia y vuelve a usted cuando paga. Plazo de 1 a '+r.maxMonths+' meses, con renovación de intereses si lo necesita.','Hasta '+r.loanPct+'%','del valor del oro · '+num(r.rate,2)+'% mensual'],
+    ['Compra de oro','Joyas, lingotes, oro roto y monedas. Pesamos y verificamos el quilataje frente a usted y pagamos al terminar la tasación.',r.buyPct+'%','del valor de mercado, pago inmediato'],
+    ['Venta de oro','Piezas y lingotes con peso y quilataje registrados en la factura. Puede reservar una pieza por WhatsApp y recogerla en la oficina.','Al gramo','precio del día más la hechura'],
+    ['Bienes raíces','Apartamentos, casas, lotes, locales y fincas en venta y arriendo. Le acompañamos desde la visita hasta la firma de la promesa.','Venta y arriendo','visitas con cita previa']];
+  return '<section class="sec" id="condiciones"><div class="in"><div class="sec-head"><div><span class="eyebrow">Condiciones claras</span><h2>Lo que hacemos, con sus números</h2></div><p>Los porcentajes salen de la tabla de la casa. Cualquier cambio se publica aquí al mismo tiempo.</p></div>'+
+    '<div class="terms">'+rows.map(function(x){return '<div class="term"><h3>'+x[0]+'</h3><p>'+x[1]+'</p><div class="key">'+x[2]+'<small>'+x[3]+'</small></div></div>'}).join('')+'</div></div></section>'+
+    '<section class="sec"><div class="in"><div class="sec-head"><div><span class="eyebrow">Cómo funciona un préstamo</span><h2>De la joya al efectivo en una visita</h2></div></div>'+
+    '<div class="steps"><div class="step"><h3>Traiga sus piezas</h3><p>Lleve su cédula original y las joyas o lingotes que quiere empeñar.</p></div><div class="step"><h3>Tasamos frente a usted</h3><p>Pesamos en balanza certificada y verificamos el quilataje con prueba de ácido.</p></div><div class="step"><h3>Firma del contrato</h3><p>Le entregamos la oferta por escrito: monto, interés, plazo y fecha de pago.</p></div><div class="step"><h3>Recibe el dinero</h3><p>Desembolso el mismo día. Al pagar, recupera su pieza en el mismo estado.</p></div></div></div></section>';
+}
+function goldSection(){
+  return '<section class="sec" id="oro"><div class="in"><div class="ingot-band"><div>'+ingots()+'</div><div><span class="eyebrow">Compra y venta</span><h2 style="font-size:clamp(1.8rem,3.4vw,2.7rem);margin:12px 0 16px">Oro con peso y quilataje registrados</h2><p style="color:var(--dim)">Cada pieza sale con su ficha: gramos, quilates y precio. Si una pieza le interesa, resérvela y la apartamos por tres días.</p><ul><li>Lingotes de 24 quilates en presentaciones desde 10 gramos.</li><li>Joyería de 10, 14 y 18 quilates, nueva y de segunda mano.</li><li>Recompramos lo que nos compró, al precio del día.</li></ul></div></div>'+
+    '<div class="grid" id="goldGrid"></div></div></section>';
+}
+function goldCard(x){
+  var off=x.estado!=='Disponible';
+  return '<article class="card"><div class="art">'+goldArt(x.tipo,x.quilates)+'<span class="tag">'+x.quilates+'K</span>'+(off?'<span class="tag r off">'+esc(x.estado)+'</span>':'')+(x.ejemplo?'<span class="tag ex">Ejemplo</span>':'')+'</div>'+
+    '<div class="body"><h3>'+esc(x.nombre)+'</h3><div class="facts"><span>'+esc(x.tipo)+'</span><span>'+num(x.gramos)+' g</span><span>'+x.quilates+' quilates</span></div><div class="price">'+cop(x.precio)+'</div>'+
+    '<div class="btns"><button class="btn btn-gold btn-sm" data-act="req" data-kind="Comprar oro" data-ref="'+esc(x.nombre+' ('+x.quilates+'K, '+num(x.gramos)+' g)')+'"'+(x.estado==='Vendido'?' disabled':'')+'>'+(off?'Consultar':'Reservar')+'</button></div></div></article>';
+}
+function renderGold(){
+  var g=$('#goldGrid'); if(!g) return;
+  g.innerHTML=S.gold.length?S.gold.map(goldCard).join(''):'<div class="empty">Pronto publicaremos nuevas piezas. Escríbanos para saber qué hay disponible.</div>';
+}
+function propsSection(){
+  var tipos=['Todos','Apartamento','Casa','Lote','Local','Finca'].map(function(t){return '<option>'+t+'</option>'}).join('');
+  return '<section class="sec" id="inmuebles"><div class="in"><div class="sec-head"><div><span class="eyebrow">Bienes raíces</span><h2>Inmuebles en venta y arriendo</h2></div><p>¿Tiene un inmueble para vender o arrendar? <a href="#contacto" data-act="req" data-kind="Publicar mi inmueble" style="color:var(--gold2)">Publíquelo con nosotros</a>.</p></div>'+
+    '<div class="filters"><div class="fld" style="flex:1.4 1 240px"><span class="lbl">Operación</span><div class="seg" id="fOp"><button data-op="Todas" class="on">Todas</button><button data-op="Venta">Venta</button><button data-op="Arriendo">Arriendo</button></div></div>'+
+    '<div class="fld"><label for="fTipo">Tipo</label><select id="fTipo">'+tipos+'</select></div>'+
+    '<div class="fld"><label for="fQ">Barrio o ciudad</label><input id="fQ" type="search" placeholder="Ej. Chapinero"></div>'+
+    '<div class="fld"><label for="fMax">Precio máximo (COP)</label><input id="fMax" type="number" inputmode="numeric" min="0" step="1000000" placeholder="Sin límite"></div>'+
+    '<div class="fld"><label for="fSort">Ordenar</label><select id="fSort"><option value="rec">Destacados primero</option><option value="asc">Precio: menor a mayor</option><option value="desc">Precio: mayor a menor</option></select></div></div>'+
+    '<div class="grid" id="propGrid"></div></div></section>';
+}
+function propCard(p){
+  var off=p.estado!=='Disponible';
+  var art=p.foto?'<img src="'+esc(p.foto)+'" alt="'+esc(p.titulo)+'">':propArt(p.tipo);
+  var facts='<span>'+num(p.area,0)+' m²</span>'+(p.hab?'<span>'+p.hab+' hab.</span>':'')+(p.banos?'<span>'+p.banos+' baños</span>':'');
+  return '<article class="card"><div class="art">'+art+'<span class="tag">'+esc(p.operacion)+'</span>'+(off?'<span class="tag r off">'+esc(p.estado)+'</span>':'')+(p.ejemplo?'<span class="tag ex">Ejemplo</span>':'')+'</div>'+
+    '<div class="body"><h3>'+esc(p.titulo)+'</h3><div class="loc">'+esc(p.barrio)+(p.ciudad?', '+esc(p.ciudad):'')+' · '+esc(p.tipo)+'</div><div class="facts">'+facts+'</div>'+
+    '<div class="price">'+cop(p.precio)+(p.operacion==='Arriendo'?' <small>/ mes</small>':'')+'</div>'+
+    '<div class="btns"><button class="btn btn-gold btn-sm" data-act="prop" data-id="'+esc(p.id)+'">Ver detalle</button><button class="btn btn-line btn-sm" data-act="req" data-kind="'+(p.operacion==='Arriendo'?'Arrendar un inmueble':'Comprar un inmueble')+'" data-ref="'+esc(p.titulo+' · '+p.barrio)+'">Me interesa</button></div></div></article>';
+}
+function renderProps(){
+  var g=$('#propGrid'); if(!g) return;
+  var q=F.q.trim().toLowerCase(), mx=Number(F.max)||0;
+  var list=S.props.filter(function(p){
+    if(F.op!=='Todas'&&p.operacion!==F.op) return false;
+    if(F.tipo!=='Todos'&&p.tipo!==F.tipo) return false;
+    if(q&&(p.barrio+' '+p.ciudad+' '+p.titulo).toLowerCase().indexOf(q)<0) return false;
+    if(mx&&p.precio>mx) return false;
+    return true;
+  });
+  if(F.sort==='asc') list.sort(function(a,b){return a.precio-b.precio});
+  else if(F.sort==='desc') list.sort(function(a,b){return b.precio-a.precio});
+  else list.sort(function(a,b){return (b.destacado?1:0)-(a.destacado?1:0)});
+  g.innerHTML=list.length?list.map(propCard).join(''):'<div class="empty">No hay inmuebles con esos filtros. Cambie la búsqueda o cuéntenos qué necesita y se lo conseguimos.</div>';
+}
+function faq(){
+  var q=[['¿Qué documentos necesito para empeñar o vender oro?','Su cédula de ciudadanía original y las piezas. Si la joya tiene factura o certificado, tráigalos: ayudan a la tasación, aunque no son obligatorios.'],
+    ['¿Cómo calculan cuánto me prestan?','Multiplicamos los gramos por el precio del día según el quilataje y prestamos un porcentaje de ese valor. La calculadora de esta página le da el estimado.'],
+    ['¿Qué pasa si no alcanzo a pagar en la fecha pactada?','Puede renovar pagando solo los intereses causados. El contrato que firma explica las condiciones y plazos para recuperar o renovar la prenda.'],
+    ['¿La tasación tiene costo?','No. La tasación es gratuita y no lo obliga a vender ni a empeñar.'],
+    ['¿Cómo agendo la visita a un inmueble?','Pulse «Me interesa» en el inmueble y déjenos su teléfono. Le llamamos para coordinar la visita.'],
+    ['¿Puedo publicar mi propiedad con ustedes?','Sí. Use el botón «Publíquelo con nosotros» y le contamos las condiciones de comisión y el proceso.']];
+  return '<section class="sec" id="preguntas"><div class="in"><div class="sec-head"><div><span class="eyebrow">Preguntas frecuentes</span><h2>Antes de venir, esto es lo que suelen preguntar</h2></div></div><div class="faq">'+q.map(function(x){return '<details><summary>'+x[0]+'</summary><p>'+x[1]+'</p></details>'}).join('')+'</div></div></section>';
+}
+function contact(){
+  var b=S.biz, opts=KINDS.map(function(k){return '<option>'+k+'</option>'}).join('');
+  return '<section class="sec" id="contacto"><div class="in"><div class="contact"><div><span class="eyebrow">Contacto</span><h2 style="font-size:clamp(1.8rem,3.4vw,2.7rem);margin:12px 0 14px">Hable con una persona</h2><p style="color:var(--dim)">Déjenos sus datos y le llamamos, o escríbanos directo por WhatsApp.</p>'+
+    '<div class="info-list"><div><span class="lbl">WhatsApp y teléfono</span><span class="v">'+esc(b.whatsapp)+'</span></div><div><span class="lbl">Correo</span><span class="v">'+esc(b.email)+'</span></div><div><span class="lbl">Oficina</span><span class="v">'+esc(b.address)+'</span></div><div><span class="lbl">Horario</span><span class="v">'+esc(b.hours)+'</span></div></div>'+
+    '<div class="cta-row"><a class="btn btn-gold" href="'+waLink('Hola, quiero información.')+'" target="_blank" rel="noopener">Escribir por WhatsApp</a></div></div>'+
+    '<form class="panel" id="cForm" novalidate><div class="fgrid"><div class="fld"><label for="cName">Nombre</label><input id="cName" type="text" autocomplete="name"></div><div class="fld"><label for="cTel">Teléfono</label><input id="cTel" type="tel" autocomplete="tel"></div>'+
+    '<div class="fld full"><label for="cKind">Motivo</label><select id="cKind">'+opts+'</select></div><div class="fld full"><label for="cMsg">Mensaje</label><textarea id="cMsg" placeholder="Cuéntenos qué necesita"></textarea></div></div><div class="err" id="cErr"></div><button class="btn btn-gold" type="submit" style="width:100%;margin-top:6px">Enviar solicitud</button></form></div></div></section>';
+}
+function footer(){
+  return '<footer><div class="in"><span>© 2026 '+esc(S.biz.name)+' · Precios en pesos colombianos</span><button data-act="admin">Acceso administrador</button></div></footer>';
+}
+function renderPage(){
+  $('#app').innerHTML=DEFS+ticker()+header()+hero()+terms()+goldSection()+propsSection()+faq()+contact()+footer();
+  $('#fTipo').value=F.tipo;$('#fQ').value=F.q;$('#fMax').value=F.max;$('#fSort').value=F.sort;
+  $$('#fOp button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-op')===F.op)});
+  renderCalc();renderGold();renderProps();
+}
+
+/* ---------- modales ---------- */
+function openModal(html,wide,after){
+  closeModal();
+  var o=document.createElement('div');o.className='ov';o.id='modal';
+  o.innerHTML='<div class="dlg'+(wide?' wide':'')+'" role="dialog" aria-modal="true">'+html+'</div>';
+  document.body.appendChild(o);
+  o.addEventListener('mousedown',function(e){if(e.target===o)closeModal()});
+  var f=$('input,select,textarea,button.btn',o);if(f)setTimeout(function(){f.focus()},30);
+  if(after)after(o);
+  return o;
+}
+function closeModal(){var m=$('#modal');if(m)m.remove()}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){if($('#modal'))closeModal();else if(adminOpen)closeAdmin()}});
+
+function openRequest(pre){
+  pre=pre||{};
+  var opts=KINDS.map(function(k){return '<option'+(k===pre.kind?' selected':'')+'>'+k+'</option>'}).join('');
+  openModal('<button class="x" data-act="close" aria-label="Cerrar">×</button><h2>Solicitar atención</h2><p class="sub">Déjenos sus datos y le contactamos. No necesita crear una cuenta.</p>'+
+    '<form id="rForm" novalidate><div class="fgrid"><div class="fld"><label for="rName">Nombre</label><input id="rName" type="text" autocomplete="name"></div><div class="fld"><label for="rTel">Teléfono</label><input id="rTel" type="tel" autocomplete="tel"></div>'+
+    '<div class="fld full"><label for="rKind">Motivo</label><select id="rKind">'+opts+'</select></div><div class="fld full"><label for="rMsg">Detalle</label><textarea id="rMsg">'+esc(pre.detail||'')+'</textarea></div></div><div class="err" id="rErr"></div>'+
+    '<div class="acts"><button class="btn btn-gold" type="submit">Enviar solicitud</button><button class="btn btn-line" type="button" data-act="close">Cancelar</button></div></form>');
+}
+function openProp(id){
+  var p=S.props.filter(function(x){return x.id===id})[0];if(!p)return;
+  var art=p.foto?'<img src="'+esc(p.foto)+'" alt="'+esc(p.titulo)+'">':propArt(p.tipo);
+  var kind=p.operacion==='Arriendo'?'Arrendar un inmueble':'Comprar un inmueble';
+  var ref=p.titulo+' · '+p.barrio;
+  openModal('<button class="x" data-act="close" aria-label="Cerrar">×</button><div class="det-art">'+art+'</div><span class="eyebrow">'+esc(p.operacion)+' · '+esc(p.tipo)+' · '+esc(p.estado)+'</span><h2 style="margin-top:10px">'+esc(p.titulo)+'</h2>'+
+    '<div class="det-price">'+cop(p.precio)+(p.operacion==='Arriendo'?' <small class="mono" style="font-size:.9rem;color:var(--dim)">/ mes</small>':'')+'</div>'+
+    '<div class="facts" style="margin-bottom:14px"><span>'+esc(p.barrio)+', '+esc(p.ciudad)+'</span><span>'+num(p.area,0)+' m²</span>'+(p.hab?'<span>'+p.hab+' habitaciones</span>':'')+(p.banos?'<span>'+p.banos+' baños</span>':'')+'</div>'+
+    '<p style="color:var(--dim)">'+esc(p.descripcion)+'</p><div class="acts"><button class="btn btn-gold" data-act="req" data-kind="'+kind+'" data-ref="'+esc(ref)+'">Me interesa</button><a class="btn btn-line" target="_blank" rel="noopener" href="'+waLink('Hola, me interesa: '+ref)+'">WhatsApp</a></div>',true);
+}
+
+/* ---------- solicitudes ---------- */
+function localReqs(){return ls('reqs')||[]}
+async function sendRequest(d){
+  var req={id:'S-'+Date.now().toString(36).toUpperCase(),createdAt:new Date().toISOString(),status:'Nueva',nombre:d.nombre,telefono:d.telefono,motivo:d.motivo,detalle:d.detalle,nota:''};
+  var l=localReqs();l.push(req);ls('reqs',l);
+  var shared=false;
+  try{
+    var db=await cap('db'),u=await cap('user');
+    var uid=u?await u.id():null;
+    if(db&&uid){
+      var ref=db.doc('solicitudes/'+uid),snap=await ref.get();
+      var items=snap.exists?((snap.data()||{}).items||[]):[];
+      items.push(req);
+      await ref.set({uid:uid,items:items});
+      shared=true;
+    }
+  }catch(e){shared=false}
+  return {req:req,shared:shared};
+}
+function validate(n,t){
+  if(!n.trim())return 'Escriba su nombre.';
+  if(digits(t).length<7)return 'Escriba un teléfono válido, con al menos 7 dígitos.';
+  return '';
+}
+async function handleSubmit(prefix,btn){
+  var n=$('#'+prefix+'Name').value,t=$('#'+prefix+'Tel').value,k=$('#'+prefix+'Kind').value,m=$('#'+prefix+'Msg').value.trim();
+  var err=validate(n,t);var e=$('#'+prefix+'Err');
+  if(err){e.textContent=err;return}
+  e.textContent='';
+  if(btn)btn.disabled=true;
+  var res=await sendRequest({nombre:n.trim(),telefono:t.trim(),motivo:k,detalle:m});
+  var msg='Hola, soy '+n.trim()+' ('+t.trim()+'). '+k+(m?': '+m:'.')+' Solicitud '+res.req.id;
+  openModal('<button class="x" data-act="close" aria-label="Cerrar">×</button><h2>Solicitud '+esc(res.req.id)+' guardada</h2>'+
+    '<p class="sub">'+(res.shared?'El administrador ya puede verla en su panel. Si es urgente, escríbanos también por WhatsApp.':'Quedó guardada en este dispositivo. Para que el equipo la reciba de inmediato, envíela por WhatsApp.')+'</p>'+
+    '<div class="acts"><a class="btn btn-gold" target="_blank" rel="noopener" href="'+waLink(msg)+'">Enviar por WhatsApp</a><button class="btn btn-line" data-act="close">Cerrar</button></div>'+
+    '<p class="fine mono">Número: '+esc(S.biz.whatsapp)+'</p>');
+  if(prefix==='c'){$('#cForm').reset();}
+}
+
+/* ---------- administrador ---------- */
+async function openAdmin(){
+  var u=await cap('user'),ok=false;
+  try{ok=u?await u.canEdit():false}catch(e){ok=false}
+  if(!ok){
+    openModal('<button class="x" data-act="close" aria-label="Cerrar">×</button><h2>Área del administrador</h2><p class="sub">Solo la cuenta propietaria de esta página puede editar precios, inmuebles y solicitudes. Abra la página con esa cuenta de Claude para entrar.</p><div class="acts"><button class="btn btn-gold" data-act="close">Entendido</button></div>');
+    return;
+  }
+  adminOpen=true;renderAdmin();subscribeReqs();
+}
+function closeAdmin(){adminOpen=false;var a=$('#admin');if(a)a.remove()}
+async function subscribeReqs(){
+  if(dbSub)return;
+  try{
+    var db=await cap('db');if(!db)return;dbSub=true;
+    db.collection('solicitudes').onSnapshot(function(snap){
+      remote=snap.docs.map(function(d){return {uid:d.id,items:((d.data()||{}).items)||[]}});
+      if(adminOpen)renderAdmin();
+    },function(){dbSub=false});
+  }catch(e){dbSub=false}
+}
+function allReqs(){
+  var out=[];
+  remote.forEach(function(d){d.items.forEach(function(r){out.push(Object.assign({},r,{_uid:d.uid,_src:'db'}))})});
+  localReqs().forEach(function(r){if(!out.some(function(x){return x.id===r.id}))out.push(Object.assign({},r,{_src:'local'}))});
+  return out.sort(function(a,b){return String(b.createdAt).localeCompare(String(a.createdAt))});
+}
+async function patchReq(id,patch,del){
+  var r=allReqs().filter(function(x){return x.id===id})[0];if(!r)return;
+  if(r._src==='db'){
+    try{
+      var db=await cap('db'),ref=db.doc('solicitudes/'+r._uid),snap=await ref.get();
+      var items=((snap.data()||{}).items||[]).filter(function(x){return !(del&&x.id===id)}).map(function(x){return x.id===id?Object.assign({},x,patch):x});
+      await ref.set({uid:r._uid,items:items});
+    }catch(e){toast('No se pudo guardar el cambio.')}
+  }else{
+    var l=localReqs().filter(function(x){return !(del&&x.id===id)}).map(function(x){return x.id===id?Object.assign({},x,patch):x});
+    ls('reqs',l);if(adminOpen)renderAdmin();
+  }
+}
+function adminShell(){
+  var nr=allReqs().filter(function(r){return r.status==='Nueva'}).length;
+  var tabs=[['resumen','Resumen'],['solicitudes','Solicitudes',nr],['inmuebles','Inmuebles'],['oro','Piezas de oro'],['precios','Precios y condiciones'],['negocio','Datos del negocio']];
+  return '<div class="adm" id="admin"><aside><h3>Panel de administración</h3>'+tabs.map(function(t){return '<button class="tab'+(adminTab===t[0]?' on':'')+'" data-act="tab" data-tab="'+t[0]+'"><span>'+t[1]+'</span>'+(t[2]?'<span class="cnt">'+t[2]+'</span>':'')+'</button>'}).join('')+'<button class="tab" data-act="admin-close" style="margin-top:auto"><span>← Volver a la página</span></button></aside><main id="admMain"></main></div>';
+}
+function pubBar(){
+  return '<div class="pubbar"><span class="st'+(dirty?' dirty':'')+'">'+(dirty?'Hay cambios sin publicar':'Todo publicado')+'</span><button class="btn btn-gold btn-sm" data-act="publish"'+(dirty?'':' disabled')+'>Publicar cambios</button></div>';
+}
+function renderAdmin(){
+  var a=$('#admin');
+  var keep=a&&$('#admMain')?$('#admMain').scrollTop:0;
+  if(a)a.remove();
+  document.body.insertAdjacentHTML('beforeend',adminShell());
+  var m=$('#admMain'),h='';
+  var reqs=allReqs();
+  if(S.biz.demo||S.props.some(function(p){return p.ejemplo})||S.gold.some(function(g){return g.ejemplo})){
+    h+='<div class="notice">La página trae datos de ejemplo (inmuebles, piezas, teléfono y dirección). Edítelos o elimínelos antes de compartir el enlace.</div>';
+  }
+  if(adminTab==='resumen'){
+    var disp=S.props.filter(function(p){return p.estado==='Disponible'}).length;
+    h='<h2>Resumen</h2><p class="sub">Así está su negocio hoy.</p>'+h+pubBar()+
+      '<div class="stats"><div class="stat"><b>'+reqs.filter(function(r){return r.status==='Nueva'}).length+'</b><span>Solicitudes nuevas</span></div><div class="stat"><b>'+reqs.length+'</b><span>Solicitudes totales</span></div><div class="stat"><b>'+disp+'</b><span>Inmuebles disponibles</span></div><div class="stat"><b>'+S.gold.filter(function(g){return g.estado==='Disponible'}).length+'</b><span>Piezas de oro</span></div><div class="stat"><b style="font-size:1.35rem">'+cop(S.rates.gold24)+'</b><span>Oro 24K por gramo</span></div></div>'+
+      '<p class="sub">Los cambios que haga en las demás pestañas se ven en la página al instante, pero solo los ven los visitantes cuando pulsa «Publicar cambios».</p>';
+  }else if(adminTab==='solicitudes'){
+    h='<h2>Solicitudes</h2><p class="sub">Los visitantes que pueden guardar datos en la página aparecen aquí. Las que llegan por WhatsApp quedan en su chat.</p>'+
+      (reqs.length?reqs.map(function(r){
+        var st=['Nueva','En proceso','Cerrada'].map(function(s){return '<option'+(s===r.status?' selected':'')+'>'+s+'</option>'}).join('');
+        return '<div class="lrow"><div class="t"><b>'+esc(r.nombre)+' · '+esc(r.motivo)+'</b><span>'+esc(r.telefono)+' · '+esc(fdt(r.createdAt))+' · '+esc(r.id)+(r._src==='local'?' · solo en este navegador':'')+'<br>'+esc(r.detalle||'Sin detalle')+'</span></div><div class="a"><select data-act="req-status" data-id="'+esc(r.id)+'" aria-label="Estado" style="width:auto;min-height:38px;padding:6px 10px">'+st+'</select><a class="btn btn-line btn-sm" target="_blank" rel="noopener" href="https://wa.me/'+digits(r.telefono)+'">WhatsApp</a><button class="btn btn-bad btn-sm" data-act="req-del" data-id="'+esc(r.id)+'">Eliminar</button></div></div>';
+      }).join(''):'<div class="empty">Aún no hay solicitudes.</div>');
+  }else if(adminTab==='inmuebles'){
+    h='<h2>Inmuebles</h2><p class="sub">Agregue, edite o retire inmuebles. Marque «Destacado» para mostrarlos primero.</p>'+h+pubBar()+'<button class="btn btn-gold btn-sm" data-act="add-prop" style="margin-bottom:16px">+ Nuevo inmueble</button>'+
+      (S.props.length?S.props.map(function(p){return '<div class="lrow"><div class="t"><b>'+esc(p.titulo)+'</b><span>'+esc(p.operacion)+' · '+esc(p.tipo)+' · '+esc(p.barrio)+' · '+cop(p.precio)+'</span></div><div class="a"><span class="badge '+(p.estado==='Disponible'?'ok':'')+'">'+esc(p.estado)+'</span>'+(p.ejemplo?'<span class="badge">Ejemplo</span>':'')+'<button class="btn btn-line btn-sm" data-act="edit-prop" data-id="'+esc(p.id)+'">Editar</button><button class="btn btn-bad btn-sm" data-act="del-prop" data-id="'+esc(p.id)+'">Eliminar</button></div></div>'}).join(''):'<div class="empty">No hay inmuebles publicados.</div>');
+  }else if(adminTab==='oro'){
+    h='<h2>Piezas de oro</h2><p class="sub">Piezas y lingotes que tiene a la venta.</p>'+h+pubBar()+'<button class="btn btn-gold btn-sm" data-act="add-gold" style="margin-bottom:16px">+ Nueva pieza</button>'+
+      (S.gold.length?S.gold.map(function(g){return '<div class="lrow"><div class="t"><b>'+esc(g.nombre)+'</b><span>'+esc(g.tipo)+' · '+g.quilates+'K · '+num(g.gramos)+' g · '+cop(g.precio)+'</span></div><div class="a"><span class="badge '+(g.estado==='Disponible'?'ok':'')+'">'+esc(g.estado)+'</span>'+(g.ejemplo?'<span class="badge">Ejemplo</span>':'')+'<button class="btn btn-line btn-sm" data-act="edit-gold" data-id="'+esc(g.id)+'">Editar</button><button class="btn btn-bad btn-sm" data-act="del-gold" data-id="'+esc(g.id)+'">Eliminar</button></div></div>'}).join(''):'<div class="empty">No hay piezas publicadas.</div>');
+  }else if(adminTab==='precios'){
+    var r=S.rates;
+    h='<h2>Precios y condiciones</h2><p class="sub">El precio del oro 24K es la base de la calculadora, de la cinta superior y de la tabla de quilates.</p>'+h+pubBar()+
+      '<div class="set-grid"><div class="fld"><label for="sG">Oro 24K por gramo (COP)</label><input id="sG" type="number" min="0" step="1000" value="'+r.gold24+'"></div><div class="fld"><label for="sB">Oferta de compra (% del valor)</label><input id="sB" type="number" min="1" max="100" step="1" value="'+r.buyPct+'"></div><div class="fld"><label for="sL">Préstamo máximo (% del valor)</label><input id="sL" type="number" min="1" max="100" step="1" value="'+r.loanPct+'"></div><div class="fld"><label for="sR">Interés mensual (%)</label><input id="sR" type="number" min="0" max="10" step="0.1" value="'+r.rate+'"></div><div class="fld"><label for="sM">Plazo máximo (meses)</label><input id="sM" type="number" min="1" max="36" step="1" value="'+r.maxMonths+'"></div></div><div class="err" id="sErr"></div><button class="btn btn-gold" data-act="save-rates" style="margin-top:12px">Aplicar precios</button>';
+  }else{
+    var b=S.biz;
+    h='<h2>Datos del negocio</h2><p class="sub">Aparecen en el encabezado, el contacto y los enlaces de WhatsApp.</p>'+h+pubBar()+
+      '<div class="set-grid"><div class="fld"><label for="bN">Nombre</label><input id="bN" type="text" value="'+esc(b.name)+'"></div><div class="fld"><label for="bT">Lema</label><input id="bT" type="text" value="'+esc(b.tagline)+'"></div><div class="fld"><label for="bW">WhatsApp (con indicativo)</label><input id="bW" type="tel" value="'+esc(b.whatsapp)+'"></div><div class="fld"><label for="bE">Correo</label><input id="bE" type="text" value="'+esc(b.email)+'"></div><div class="fld"><label for="bA">Dirección</label><input id="bA" type="text" value="'+esc(b.address)+'"></div><div class="fld"><label for="bH">Horario</label><input id="bH" type="text" value="'+esc(b.hours)+'"></div></div><button class="btn btn-gold" data-act="save-biz" style="margin-top:18px">Aplicar datos</button>';
+  }
+  m.innerHTML=h;m.scrollTop=keep;
+}
+function markDirty(){dirty=true;renderPage();if(adminOpen)renderAdmin()}
+function field(f,v){
+  var id='e_'+f.k,val=v==null?'':v,x='';
+  if(f.t==='select')x='<select id="'+id+'">'+f.o.map(function(o){return '<option'+(String(o)===String(val)?' selected':'')+'>'+o+'</option>'}).join('')+'</select>';
+  else if(f.t==='textarea')x='<textarea id="'+id+'">'+esc(val)+'</textarea>';
+  else if(f.t==='check')return '<div class="fld full"><label class="chk" for="'+id+'"><input id="'+id+'" type="checkbox"'+(val?' checked':'')+'> '+f.l+'</label></div>';
+  else if(f.t==='file')return '<div class="fld full"><label for="'+id+'">'+f.l+'</label><input id="'+id+'" type="file" accept="image/*"></div>';
+  else x='<input id="'+id+'" type="'+(f.t||'text')+'"'+(f.t==='number'?' step="any" min="0"':'')+' value="'+esc(val)+'">';
+  return '<div class="fld'+(f.full?' full':'')+'"><label for="'+id+'">'+f.l+'</label>'+x+'</div>';
+}
+var PF=[{k:'titulo',l:'Título',full:1},{k:'operacion',l:'Operación',t:'select',o:['Venta','Arriendo']},{k:'tipo',l:'Tipo',t:'select',o:['Apartamento','Casa','Lote','Local','Finca']},{k:'ciudad',l:'Ciudad'},{k:'barrio',l:'Barrio o sector'},{k:'precio',l:'Precio o canon (COP)',t:'number'},{k:'area',l:'Área (m²)',t:'number'},{k:'hab',l:'Habitaciones',t:'number'},{k:'banos',l:'Baños',t:'number'},{k:'estado',l:'Estado',t:'select',o:['Disponible','Reservado','Vendido','Arrendado']},{k:'descripcion',l:'Descripción',t:'textarea',full:1},{k:'foto',l:'Foto (opcional)',t:'file'},{k:'destacado',l:'Mostrar primero (destacado)',t:'check'}];
+var GF=[{k:'nombre',l:'Nombre',full:1},{k:'tipo',l:'Tipo',t:'select',o:['Cadena','Anillo','Aretes','Pulsera','Dije','Lingote']},{k:'quilates',l:'Quilates',t:'select',o:KARATS},{k:'gramos',l:'Gramos',t:'number'},{k:'precio',l:'Precio de venta (COP)',t:'number'},{k:'estado',l:'Estado',t:'select',o:['Disponible','Reservado','Vendido']}];
+function readPhoto(file){return new Promise(function(res,rej){var fr=new FileReader();fr.onload=function(){var im=new Image();im.onload=function(){var r=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*r);c.height=Math.round(im.height*r);c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.72))};im.onerror=rej;im.src=fr.result};fr.onerror=rej;fr.readAsDataURL(file)})}
+function editor(kind,item){
+  var isP=kind==='prop',spec=isP?PF:GF,it=item||(isP?{operacion:'Venta',tipo:'Apartamento',estado:'Disponible',hab:0,banos:0,area:0,precio:0,destacado:false}:{tipo:'Cadena',quilates:18,estado:'Disponible',gramos:0,precio:0});
+  var o=openModal('<button class="x" data-act="close" aria-label="Cerrar">×</button><h2>'+(item?'Editar':'Nuevo')+(isP?' inmueble':' pieza de oro')+'</h2><form id="eForm" novalidate><div class="fgrid">'+spec.map(function(f){return field(f,it[f.k])}).join('')+'</div><div class="err" id="eErr"></div><div class="acts"><button class="btn btn-gold" type="submit">Guardar</button><button class="btn btn-line" type="button" data-act="close">Cancelar</button></div></form>',true);
+  $('#modal').style.zIndex=90;
+  $('#eForm').addEventListener('submit',async function(e){
+    e.preventDefault();
+    var out=Object.assign({},it);
+    for(var i=0;i<spec.length;i++){
+      var f=spec[i],el=$('#e_'+f.k);
+      if(f.t==='check')out[f.k]=el.checked;
+      else if(f.t==='file'){if(el.files&&el.files[0]){try{out.foto=await readPhoto(el.files[0])}catch(x){$('#eErr').textContent='No se pudo leer la foto.';return}}}
+      else if(f.t==='number'||f.k==='quilates')out[f.k]=Number(el.value)||0;
+      else out[f.k]=el.value.trim();
+    }
+    var nameKey=isP?'titulo':'nombre';
+    if(!out[nameKey]){$('#eErr').textContent='Escriba un título.';return}
+    if(!(out.precio>0)){$('#eErr').textContent='Escriba un precio mayor que cero.';return}
+    out.ejemplo=false;
+    var arr=isP?S.props:S.gold;
+    if(item){var ix=arr.indexOf(item);if(ix>=0)arr[ix]=out}else{out.id=(isP?'p':'g')+Date.now().toString(36);arr.push(out)}
+    closeModal();markDirty();
+  });
+}
+async function publish(){
+  var art=await cap('artifact');
+  if(!art){toast('Publicar no está disponible en esta vista.');return}
+  var btn=$('[data-act="publish"]');if(btn){btn.disabled=true;btn.textContent='Publicando…'}
+  try{
+    var json=JSON.stringify(S).replace(/</g,'\\u003c');
+    var css=$('#app-style').textContent,js=$('#app-script').textContent;
+    var doc='<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>'+RESET+'</style></head><body>'+HEAD+'<style id="app-style">'+css+'</style>'+SHELL+'<script id="state" type="application/json">'+json+'<'+'/script><script id="app-script">'+js+'<'+'/script></body></html>';
+    await art.publish(doc);
+    dirty=false;toast('Cambios publicados.');
+  }catch(e){
+    if(btn){btn.disabled=false;btn.textContent='Publicar cambios'}
+    toast(e&&e.code==='conflict'?'Alguien publicó antes. Recargue e intente de nuevo.':'No se pudo publicar. Intente otra vez.');
+  }
+}
+
+/* ---------- eventos ---------- */
+document.addEventListener('click',function(e){
+  var t=e.target.closest('[data-act]');
+  if(t){
+    var a=t.getAttribute('data-act'),id=t.getAttribute('data-id');
+    if(a==='close'){closeModal();return}
+    if(a==='req'){e.preventDefault();openRequest({kind:t.getAttribute('data-kind'),detail:t.getAttribute('data-ref')?'Me interesa: '+t.getAttribute('data-ref'):''});return}
+    if(a==='prop'){openProp(id);return}
+    if(a==='calc-loan'||a==='calc-sell'){var c=calcVals();var loan=a==='calc-loan';openRequest({kind:loan?'Préstamo con garantía de oro':'Vender mi oro',detail:'Oro de '+c.k+' quilates, '+num(c.g)+' g. '+(loan?'Préstamo estimado: '+cop(c.loan)+'.':'Oferta estimada: '+cop(c.buy)+'.')});return}
+    if(a==='admin'){openAdmin();return}
+    if(a==='admin-close'){closeAdmin();return}
+    if(a==='tab'){adminTab=t.getAttribute('data-tab');renderAdmin();return}
+    if(a==='publish'){publish();return}
+    if(a==='add-prop'){editor('prop');return}
+    if(a==='add-gold'){editor('gold');return}
+    if(a==='edit-prop'){editor('prop',S.props.filter(function(x){return x.id===id})[0]);return}
+    if(a==='edit-gold'){editor('gold',S.gold.filter(function(x){return x.id===id})[0]);return}
+    if(a==='del-prop'||a==='del-gold'){
+      if(t.getAttribute('data-sure')!=='1'){t.setAttribute('data-sure','1');t.textContent='Confirmar eliminar';return}
+      var arr=a==='del-prop'?S.props:S.gold;var i=arr.findIndex(function(x){return x.id===id});if(i>=0)arr.splice(i,1);markDirty();return;
+    }
+    if(a==='req-del'){
+      if(t.getAttribute('data-sure')!=='1'){t.setAttribute('data-sure','1');t.textContent='Confirmar eliminar';return}
+      patchReq(id,{},true);return;
+    }
+    if(a==='save-rates'){
+      var g=Number($('#sG').value),b=Number($('#sB').value),l=Number($('#sL').value),r=Number($('#sR').value),m=Number($('#sM').value);
+      if(!(g>0)||!(b>0&&b<=100)||!(l>0&&l<=100)||!(r>=0)||!(m>=1)){$('#sErr').textContent='Revise los valores: el precio debe ser mayor que cero y los porcentajes entre 1 y 100.';return}
+      S.rates={gold24:g,buyPct:b,loanPct:l,rate:r,maxMonths:m,updated:new Date().toISOString().slice(0,10)};
+      markDirty();toast('Precios aplicados.');return;
+    }
+    if(a==='save-biz'){
+      S.biz={name:$('#bN').value.trim()||S.biz.name,tagline:$('#bT').value.trim(),whatsapp:$('#bW').value.trim(),phone:$('#bW').value.trim(),email:$('#bE').value.trim(),address:$('#bA').value.trim(),hours:$('#bH').value.trim(),demo:false};
+      markDirty();toast('Datos aplicados.');return;
+    }
+  }
+  var op=e.target.closest('#fOp button');
+  if(op){F.op=op.getAttribute('data-op');$$('#fOp button').forEach(function(b){b.classList.toggle('on',b===op)});renderProps()}
+});
+document.addEventListener('change',function(e){
+  var t=e.target;
+  if(t.id==='cK')renderCalc();
+  if(t.id==='fTipo'){F.tipo=t.value;renderProps()}
+  if(t.id==='fSort'){F.sort=t.value;renderProps()}
+  if(t.id==='fMax'){F.max=t.value;renderProps()}
+  if(t.getAttribute&&t.getAttribute('data-act')==='req-status')patchReq(t.getAttribute('data-id'),{status:t.value});
+});
+document.addEventListener('input',function(e){
+  var t=e.target;
+  if(t.id==='cG')renderCalc();
+  if(t.id==='fQ'){F.q=t.value;renderProps()}
+  if(t.id==='fMax'){F.max=t.value;renderProps()}
+});
+document.addEventListener('submit',function(e){
+  var f=e.target;
+  if(f.id==='rForm'){e.preventDefault();handleSubmit('r',f.querySelector('button[type=submit]'))}
+  if(f.id==='cForm'){e.preventDefault();handleSubmit('c',f.querySelector('button[type=submit]'))}
+});
+
+renderPage();
+})();
+</script>
+
+</body></html>
